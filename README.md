@@ -1,86 +1,94 @@
-# class Transaction {
-    constructor(type, amount) {
-        this._type = type;
-        this._amount = amount;
-        this._timestamp = new Date();
-    }
+class Transaction {
+  constructor(type, amount) {
+    this._type = type;
+    this._amount = amount;
+    this._timestamp = new Date();
+  }
 
-    getType() {
-        return this._type;
-    }
+  // Getters
+  get type() {
+    return this._type;
+  }
 
-    setType(type) {
-        this._type = type;
-    }
+  get amount() {
+    return this._amount;
+  }
 
-    getAmount() {
-        return this._amount;
-    }
-
-    setAmount(amount) {
-        this._amount = amount;
-    }
-
-    getTimestamp() {
-        return this._timestamp;
-    }
+  get timestamp() {
+    return this._timestamp;
+  }
 }
 
 class BankAccount {
-    constructor(accountNumber, firstName, lastName) {
-        this._accountNumber = accountNumber;
-        this._firstName = firstName;
-        this._lastName = lastName;
-        this._accountHolder = `${firstName} ${lastName}`;
-        this._balance = 0;
-        this._transactions = [];
-    }
+  constructor(accountNumber, firstName, lastName) {
+    this._accountNumber = accountNumber;
+    this._firstName = firstName;
+    this._lastName = lastName;
+    this._accountHolder = `${firstName} ${lastName}`;
+    this._balance = 0;
+    this._transactions = [];
+  }
 
-    get accountNumber() {
-        return this._accountNumber;
-    }
+  // Getters
+  get accountNumber() {
+    return this._accountNumber;
+  }
 
-    get firstName() {
-        return this._firstName;
-    }
+  get firstName() {
+    return this._firstName;
+  }
 
-    get lastName() {
-        return this._lastName;
-    }
+  get lastName() {
+    return this._lastName;
+  }
 
-    get accountHolder() {
-        return this._accountHolder;
-    }
+  get accountHolder() {
+    return this._accountHolder;
+  }
 
-    get balance() {
-        return this._balance;
-    }
+  get balance() {
+    return this._balance;
+  }
 
-    get transactions() {
-        return this._transactions;
-    }
+  get transactions() {
+    return this._transactions;
+  }
 
-    deposit(amount) {
-        if (amount > 0) {
-            this._balance += amount;
-            const transaction = new Transaction("Deposit", amount);
-            this._transactions.push(transaction);
-            return true;
-        } else {
-            return false;
-        }
+  // Methods
+  deposit(amount) {
+    if (amount > 0) {
+      this._balance += amount;
+      const transaction = new Transaction('Deposit', amount);
+      this._transactions.push(transaction);
+      return true;
+    } else {
+      console.log('Invalid amount for deposit.');
+      return false;
     }
+  }
 
-    withdraw(amount) {
-        if (amount > 0 && amount <= this._balance) {
-            this._balance -= amount;
-            const transaction = new Transaction("Withdrawal", amount);
-            this._transactions.push(transaction);
-            return true;
-        } else {
-            return false;
-        }
+  withdraw(amount) {
+    if (amount > 0 && this._balance >= amount) {
+      this._balance -= amount;
+      const transaction = new Transaction('Withdrawal', amount);
+      this._transactions.push(transaction);
+      return true;
+    } else {
+      console.log('Invalid amount or insufficient funds for withdrawal.');
+      return false;
     }
+  }
 
-    getTransactions() {
-        return 
+  getTransactions() {
+    return this._transactions;
+  }
+}
+
+// sample usage
+const myAccount = new BankAccount(1130709156, 'valentine', 'jide');
+console.log('Initial Balance:', myAccount.balance);
+myAccount.deposit(60000);
+myAccount.withdraw(8000);
+console.log('Account Holder:', myAccount.accountHolder);
+console.log('Current Balance:', myAccount.balance);
+console.log('Transactions:', myAccount.getTransactions());
