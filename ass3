@@ -1,0 +1,106 @@
+class Transaction {
+    constructor(type, amount) {
+        this._type = type;
+        this._amount = amount;
+        this._timestamp = new Date();
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get amount() {
+        return this._amount;
+    }
+
+    get timestamp() {
+        return this._timestamp;
+    }
+}
+
+class BankAccount {
+    constructor(accountNumber, firstName, lastName) {
+        this._accountNumber = accountNumber;
+        this._firstName = firstName;
+        this._lastName = lastName;
+        this._accountHolder = `${firstName} ${lastName}`;
+        this._balance = 0;
+        this._transactions = [];
+        this._dailyWithdrawalLimit = 1000;
+        this._withdrawalAmountToday = 0;
+    }
+
+    get accountNumber() {
+        return this._accountNumber;
+    }
+
+    get firstName() {
+        return this._firstName;
+    }
+
+    get lastName() {
+        return this._lastName;
+    }
+
+    get accountHolder() {
+        return this._accountHolder;
+    }
+
+    get balance() {
+        return this._balance;
+    }
+
+    get transactions() {
+        return this._transactions;
+    }
+
+    deposit(amount) {
+        this._balance += amount;
+        this._transactions.push(new Transaction("Deposit", amount));
+    }
+
+    withdraw(amount) {
+        if (amount > this._balance) {
+            console.log("Insufficient funds");
+            return;
+        }
+
+        if (this._withdrawalAmountToday + amount > this._dailyWithdrawalLimit) {
+            console.log("Exceeded daily withdrawal limit");
+            return;
+        }
+
+        this._balance -= amount;
+        this._transactions.push(new Transaction("Withdrawal", amount));
+        this._withdrawalAmountToday += amount;
+    }
+
+    getTransactions() {
+        return this._transactions.map(transaction => ({
+            type: transaction.type,
+            amount: transaction.amount,
+            timestamp: transaction.timestamp
+        }));
+    }
+
+    transfer(amount, targetAccount) {
+        if (amount > this._balance) {
+            console.log("Insufficient funds");
+            return;
+        }
+
+        this.withdraw(amount);
+        targetAccount.deposit(amount);
+    }
+}
+
+// Usage example
+let account1 = new BankAccount(123456, "valentine", "jide");
+let account2 = new BankAccount(654321, "john", "valz");
+
+account1.deposit(5000);
+account1.withdraw(2500);
+account1.transfer(2000, account2);
+
+console.log(account1.balance);  // 3000
+console.log(account1.getTransactions());
